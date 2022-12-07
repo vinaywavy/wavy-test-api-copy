@@ -1,0 +1,43 @@
+services:
+  api:
+    depends_on: ['postgres']
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: development
+    volumes:
+      - ./dist:/usr/src/app/dist
+      - ./src:/usr/src/app/src
+      - ./.env:/usr/src/app/.env
+    environment:
+      - DATABASE_HOST=postgres
+    command: npm run start:debug
+    ports:
+      - 3001:3000
+      - 9229:9229
+    user: "node"
+  redis:
+    image: docker.io/bitnami/redis:7.0
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_DISABLE_COMMANDS: FLUSHDB, FLUSHALL
+    ports:
+      - 6739:6739
+    volumes:
+      - 'wavyhealth-redis:/bitnami/redis/data'
+  postgres:
+    image: docker.io/bitnami/postgresql:14
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DATABASE_NAME} -U $${POSTGRES_DATABASE_USER}"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 5s
+    environment:
+      POSTGRES_DATABASE: ${POSTGRES_DATABASE_NAME}
+      POSTGRES_USER: ${POSTGRES_DATABASE_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_DATABASE_PASSWORD}
+volumes:
+  wavyhealth-postgres:
+  wavyhealth-redis:

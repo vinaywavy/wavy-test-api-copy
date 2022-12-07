@@ -14,8 +14,8 @@ const config: Options = {
   },
   entities: ['dist/**/*.entity.js'],
   entitiesTs: ['src/**/*.entity.ts'],
-  dbName: 'test.sqlite3',
-  type: 'sqlite',
+  dbName: 'wavyhealth',
+  type: 'postgresql',
 };
 
 export default config;
