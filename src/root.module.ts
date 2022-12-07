@@ -23,7 +23,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
           port: config.get<number>('REDIS_PORT'),
           password: config.get<string>('REDIS_PASSWORD')
         }
-      })
+      }),
+      inject: [ConfigService]
     }),
     TestModule,
     ThryveModule

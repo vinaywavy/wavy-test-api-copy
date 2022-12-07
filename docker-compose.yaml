@@ -10,7 +10,7 @@ services:
       - ./src:/usr/src/app/src
       - ./.env:/usr/src/app/.env
     environment:
-      - DATABASE_HOST=postgres
+      - POSTGRES_DATABASE_HOST=postgres
     command: npm run start:debug
     ports:
       - 3001:3000
@@ -22,7 +22,7 @@ services:
       REDIS_PASSWORD: ${REDIS_PASSWORD}
       REDIS_DISABLE_COMMANDS: FLUSHDB, FLUSHALL
     ports:
-      - 6739:6739
+      - '${REDIS_PORT}:${REDIS_PORT}'
     volumes:
       - 'wavyhealth-redis:/bitnami/redis/data'
   postgres:
@@ -38,6 +38,8 @@ services:
       POSTGRES_DATABASE: ${POSTGRES_DATABASE_NAME}
       POSTGRES_USER: ${POSTGRES_DATABASE_USER}
       POSTGRES_PASSWORD: ${POSTGRES_DATABASE_PASSWORD}
+    ports:
+      - '${POSTGRES_DATABASE_PORT}:${POSTGRES_DATABASE_PORT}'
 volumes:
   wavyhealth-postgres:
   wavyhealth-redis:

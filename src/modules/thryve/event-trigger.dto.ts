@@ -10,7 +10,6 @@ class DynamicEpochValues {
     startTimestampUnix: number;
     endTimestampUnix: number;
     dynamicValueTypes: number[];
-
 }
 
 class SourceUpdate {
