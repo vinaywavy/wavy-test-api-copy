@@ -11,34 +11,35 @@ export class ThryveController implements OnModuleInit {
   ) {}
 
   onModuleInit() {
-    this.thryveSourceUpdatesQueue.add({
-      sourceUpdate: {
-        authenticationToken: 'd7badc16a90ffb36a8fdbc1e63ecff76',
-        partnerUserID: 'nNsrYjmufX0q92bGDXt0E3Ugt0WPQiJf',
-        dataSource: 2,
-        createdAt: '2020-02-26T16:54:30Z',
-        '/v5/dailyDynamicValues': {
-          startDay: '2022-12-05',
-          endDay: '2022-12-08',
-          dailyDynamicValueTypes: [
-            6010, 6011, 6012, 6013, 5050, 2000, 2001, 2002, 2003, 1012, 3000,
-            3100, 1115, 1114,
-          ],
-          startTimestampUnix: 1670203868000,
-          endTimestampUnix: 1670503868000,
-        },
-        '/v5/dynamicEpochValues': {
-          startTimestamp: '2022-12-05T00:00:00Z',
-          endTimestamp: '2022-12-08T00:00:00Z',
-          dynamicValueTypes: [
-            6010, 6011, 6012, 6013, 5050, 2000, 2001, 2002, 2003, 1012, 3000,
-            3100, 1115, 1114,
-          ],
-          startTimestampUnix: 1670503868000,
-          endTimestampUnix: 1670203868000,
-        },
-      },
-    });
+    // TODO: Remove example EventTrigger
+    // this.thryveSourceUpdatesQueue.add({
+    //   sourceUpdate: {
+    //     authenticationToken: 'd7badc16a90ffb36a8fdbc1e63ecff76',
+    //     partnerUserID: 'nNsrYjmufX0q92bGDXt0E3Ugt0WPQiJf',
+    //     dataSource: 2,
+    //     createdAt: '2020-02-26T16:54:30Z',
+    //     '/v5/dailyDynamicValues': {
+    //       startDay: '2022-12-05',
+    //       endDay: '2022-12-08',
+    //       dailyDynamicValueTypes: [
+    //         6010, 6011, 6012, 6013, 5050, 2000, 2001, 2002, 2003, 1012, 3000,
+    //         3100, 1115, 1114,
+    //       ],
+    //       startTimestampUnix: 1670203868000,
+    //       endTimestampUnix: 1670503868000,
+    //     },
+    //     '/v5/dynamicEpochValues': {
+    //       startTimestamp: '2022-12-05T00:00:00Z',
+    //       endTimestamp: '2022-12-08T00:00:00Z',
+    //       dynamicValueTypes: [
+    //         6010, 6011, 6012, 6013, 5050, 2000, 2001, 2002, 2003, 1012, 3000,
+    //         3100, 1115, 1114,
+    //       ],
+    //       startTimestampUnix: 1670503868000,
+    //       endTimestampUnix: 1670203868000,
+    //     },
+    //   },
+    // });
   }
 
   @Post()
