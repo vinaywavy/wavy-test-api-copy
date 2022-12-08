@@ -10,7 +10,7 @@ import { UserModule } from './modules/user/user.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true
+      isGlobal: true,
     }),
     MikroOrmModule.forRoot(),
     GraphQLModule.forRoot({
@@ -22,14 +22,14 @@ import { UserModule } from './modules/user/user.module';
         redis: {
           host: config.get<string>('REDIS_HOST'),
           port: config.get<number>('REDIS_PORT'),
-          password: config.get<string>('REDIS_PASSWORD')
-        }
+          password: config.get<string>('REDIS_PASSWORD'),
+        },
       }),
-      inject: [ConfigService]
+      inject: [ConfigService],
     }),
     TestModule,
     UserModule,
-    ThryveModule
+    ThryveModule,
   ],
 })
 export class RootModule {}
