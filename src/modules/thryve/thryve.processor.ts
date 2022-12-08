@@ -12,6 +12,26 @@ export class ThryveProcessor {
 
     @Process()
     async processSourceUpdates(job: Job<EventTriggerDto>) {
+        console.info("processSourceUpdates");
         console.info(job);
+        const { 
+            "/v5/dailyDynamicValues": dailyDynamicValues, 
+            "/v5/dynamicEpochValues": dynamicEpochValues, 
+            connectionStatus 
+        } = job.data.sourceUpdate
+        
+        if (dailyDynamicValues && 
+            this.thryveService.checkIfValuesMatchInterest(dailyDynamicValues.dailyDynamicValueTypes)) {
+
+        }
+
+        if (dynamicEpochValues && 
+            this.thryveService.checkIfValuesMatchInterest(dynamicEpochValues.dynamicValueTypes)) {
+                
+        }
+
+        if (connectionStatus) {
+
+        }
     }
 }
