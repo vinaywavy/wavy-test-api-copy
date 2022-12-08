@@ -111,6 +111,7 @@ export class ThryveService {
       endTimestampUnix,
     });
 
+    // TODO: Aggregate through data and map on personal information entity
     console.info(res);
 
     // await this.personalInformationRepository.createQueryBuilder()
@@ -145,6 +146,7 @@ export class ThryveService {
       valueTypes,
     });
 
+    // TODO: Aggregate through data and map on personal information entity
     console.info(res);
 
     // await this.personalInformationRepository.createQueryBuilder()
