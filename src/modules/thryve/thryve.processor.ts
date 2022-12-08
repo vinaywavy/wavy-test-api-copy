@@ -27,9 +27,9 @@ export class ThryveProcessor {
         dataSources: '',
         detailed: true,
         displayTypeName: true,
-        endTimestamp: dailyDynamicValues.endTimestampUnix.toString(),
+        endTimestampUnix: dailyDynamicValues.endTimestampUnix.toString(),
         partnerUserId: partnerUserID,
-        startTimestamp: dailyDynamicValues.startTimestampUnix.toString(),
+        startTimestampUnix: dailyDynamicValues.startTimestampUnix.toString(),
         valueTypes: dailyDynamicValueTypes.join(','),
       });
     }
@@ -47,7 +47,7 @@ export class ThryveProcessor {
         endTimestampUnix: dailyDynamicValues.endTimestampUnix.toString(),
         partnerUserId: partnerUserID,
         startTimestampUnix: dailyDynamicValues.startTimestampUnix.toString(),
-        valueTypes: dailyDynamicValueTypes.join(','),
+        valueTypes: dailyDynamicValues.dailyDynamicValueTypes.join(','),
       });
     }
 

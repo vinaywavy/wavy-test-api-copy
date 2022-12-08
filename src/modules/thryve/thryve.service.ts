@@ -2,8 +2,8 @@ import { EntityRepository } from '@mikro-orm/postgresql';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
 import { PersonalInformationEntity } from 'src/database/entities/personal-information.entity';
-import { DailyDynamicValues, DynamicEpochValues } from './event-trigger.dto';
 import { ConfigService } from '@nestjs/config';
+import axios from 'axios';
 
 interface DynamicValueProps {
   authenticationToken: string;
@@ -15,14 +15,39 @@ interface DynamicValueProps {
 }
 
 interface ProcessDailyDynamicValuesProps extends DynamicValueProps {
-  startTimestamp: string;
-  endTimestamp: string;
+  startTimestampUnix: string;
+  endTimestampUnix: string;
 }
 
 type DailyDynamicValuesBody = Omit<
   ProcessDailyDynamicValuesProps,
   'partnerUserId'
 >;
+
+interface DynamicValuesResponseEntry {
+  authenticationToken: string;
+  partnerUserID: string;
+  dataSources: DynamicValuesDataSourceResponseEntry[];
+}
+
+interface DynamicValuesDataSourceResponseEntry {
+  dataSource: number;
+  data: DynamicValuesDataSourceDataResponseEntry[];
+}
+
+interface DynamicValuesDataSourceDataResponseEntry {
+  createdAt: number;
+  details: DailyDynamicValuesDataSourceDataDetailsResponseEntry;
+  timestampUnix: number;
+  dailyDynamicValueType: number;
+  dailyDynamicValueTypeName: string;
+  value: string;
+  valueType: string;
+}
+
+interface DailyDynamicValuesDataSourceDataDetailsResponseEntry {
+  timezoneOffset: number;
+}
 
 interface ProcessDynamicEpochValuesProps extends DynamicValueProps {
   startTimestampUnix: string;
@@ -36,7 +61,6 @@ type DynamicEpochValuesBody = Omit<
 
 @Injectable()
 export class ThryveService {
-  private baseUrl = 'https://api.und-gesund.de';
   private biomarkers: number[] = [
     6010, 6011, 6012, 6013, 5050, 2000, 2001, 2002, 2003, 1012, 3000, 3100,
     1115, 1114,
@@ -49,7 +73,6 @@ export class ThryveService {
   ) {}
 
   getValueTypesThatMatchInterest(values: number[]): number[] {
-    console.info(values);
     return this.biomarkers.filter(
       (b) => values.findIndex((v) => v === b) !== -1,
     );
@@ -70,23 +93,23 @@ export class ThryveService {
     dataSources,
     detailed,
     displayTypeName,
-    endTimestamp,
+    endTimestampUnix,
     partnerUserId,
-    startTimestamp,
+    startTimestampUnix,
     valueTypes,
   }: ProcessDailyDynamicValuesProps): Promise<PersonalInformationEntity> {
-    const res = await this.getDynamicValuesData<DailyDynamicValuesBody>(
-      '/v5/dailyDynamicValues',
-      {
-        authenticationToken,
-        valueTypes,
-        dataSources,
-        detailed,
-        displayTypeName,
-        startTimestamp,
-        endTimestamp,
-      },
-    );
+    const res = await this.getDynamicValuesData<
+      DailyDynamicValuesBody,
+      DynamicValuesResponseEntry[]
+    >('/v5/dailyDynamicValues', {
+      authenticationToken,
+      valueTypes,
+      dataSources,
+      detailed,
+      displayTypeName,
+      startTimestampUnix,
+      endTimestampUnix,
+    });
 
     console.info(res);
 
@@ -109,7 +132,10 @@ export class ThryveService {
     startTimestampUnix,
     valueTypes,
   }: ProcessDynamicEpochValuesProps): Promise<PersonalInformationEntity> {
-    const res = this.getDynamicValuesData('/v5/dynamicEpochValues', {
+    const res = await this.getDynamicValuesData<
+      DynamicEpochValuesBody,
+      DynamicValuesResponseEntry[]
+    >('/v5/dynamicEpochValues', {
       authenticationToken,
       dataSources,
       detailed,
@@ -130,7 +156,7 @@ export class ThryveService {
     return null;
   }
 
-  private async getDynamicValuesData<T>(url: string, body: T) {
+  private async getDynamicValuesData<T, R>(url: string, body: T) {
     const authorization = `Basic ${Buffer.from(
       `${this.configService.get<string>(
         'THRYVE_AUTHORIZATION_USERNAME',
@@ -143,27 +169,18 @@ export class ThryveService {
       )}:${this.configService.get<string>('THRYVE_AUTHORIZATION_APP_SECRET')}`,
     ).toString('base64')}`;
 
-    console.log({
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Authorization: authorization,
-      AppAuthorization: appAuthorization,
-      appID: this.configService.get<string>('THRYVE_AUTHORIZATION_APP_ID'),
-    });
-    console.log(body);
-
     try {
-      const res = await fetch(`${this.baseUrl}${url}`, {
-        method: 'POST',
+      const res = await axios.post<R>(url, body, {
+        baseURL: 'https://api.und-gesund.de',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
           Authorization: authorization,
           AppAuthorization: appAuthorization,
           appID: this.configService.get<string>('THRYVE_AUTHORIZATION_APP_ID'),
         },
-        body: JSON.stringify(body),
       });
-      console.log(res);
-      console.log(await res.text());
+
+      return res.data;
     } catch (e) {
       console.error(e);
     }
