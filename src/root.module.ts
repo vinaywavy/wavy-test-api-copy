@@ -6,6 +6,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { TestModule } from './modules/test/test.module';
 import { ThryveModule } from './modules/thryve/thryve.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UserModule } from './modules/user/user.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -27,6 +28,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       inject: [ConfigService]
     }),
     TestModule,
+    UserModule,
     ThryveModule
   ],
 })

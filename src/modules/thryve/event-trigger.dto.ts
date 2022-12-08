@@ -1,21 +1,21 @@
-abstract class DynamicValueUnixTimestamps {
+export abstract class DynamicValueUnixTimestamps {
     startTimestampUnix: number;
     endTimestampUnix: number;
 }
 
-class DailyDynamicValues extends DynamicValueUnixTimestamps {
+export class DailyDynamicValues extends DynamicValueUnixTimestamps {
     startDay: string;
     endDay: string;
     dailyDynamicValueTypes: number[];
 }
 
-class DynamicEpochValues extends DynamicValueUnixTimestamps {
+export class DynamicEpochValues extends DynamicValueUnixTimestamps {
     startTimestamp: string;
     endTimestamp: string;
     dynamicValueTypes: number[];
 }
 
-class SourceUpdate {
+export class SourceUpdate {
     authenticationToken: string;
     partnerUserID: string;
     dataSource: number;

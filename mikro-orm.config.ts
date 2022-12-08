@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import { Options } from "@mikro-orm/core";
 import { Migration20221207154617 } from 'src/database/migrations/Migration20221207154617';
+import { Migration20221208110347 } from 'src/database/migrations/Migration20221208110347';
 
 dotenv.config()
 
@@ -10,7 +11,10 @@ const config: Options = {
     pathTs: 'src/database/migrations',
     disableForeignKeys: false,
     snapshot: false,
-    migrationsList: [Migration20221207154617].map((migration) => ({
+    migrationsList: [
+      Migration20221207154617, 
+      Migration20221208110347
+    ].map((migration) => ({
       name: migration.name,
       class: migration
     }))
