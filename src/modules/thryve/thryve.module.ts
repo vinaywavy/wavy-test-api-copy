@@ -5,10 +5,11 @@ import { ThryveController } from './thryve.controller';
 import { ThryveProcessor } from './thryve.processor';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { PersonalInformationEntity } from 'src/database/entities/personal-information.entity';
+import { DataSourceEntity } from 'src/database/entities/data-source.entity';
 
 @Module({
   imports: [
-    MikroOrmModule.forFeature([PersonalInformationEntity]),
+    MikroOrmModule.forFeature([PersonalInformationEntity, DataSourceEntity]),
     BullModule.registerQueue({
       name: 'thryve-source-updates',
     }),

@@ -1,13 +1,14 @@
 import {
-  BeforeCreate,
+  Collection,
   Entity,
+  OneToMany,
   OneToOne,
   PrimaryKey,
   Property,
 } from '@mikro-orm/core';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { PersonalInformationEntity } from './personal-information.entity';
-import { v4 } from 'uuid';
+import { DataSourceEntity } from './data-source.entity';
 
 @Entity({ tableName: 'user' })
 @ObjectType()
@@ -15,6 +16,10 @@ export class UserEntity {
   @PrimaryKey({ autoincrement: true })
   @Field(() => ID)
   id: number;
+
+  @OneToMany(() => DataSourceEntity, (dataSource) => dataSource.user)
+  @Field(() => [DataSourceEntity])
+  dataSources = new Collection<DataSourceEntity>(this);
 
   @OneToOne(() => PersonalInformationEntity, {
     orphanRemoval: true,
@@ -25,14 +30,8 @@ export class UserEntity {
 
   @Property()
   @Field()
-  partnerUserId: string;
-
-  @Property()
-  @Field()
   username: string;
 
-  @BeforeCreate()
-  private generatePartnerUserId() {
-    this.partnerUserId = v4();
-  }
+  @Property()
+  password: string;
 }

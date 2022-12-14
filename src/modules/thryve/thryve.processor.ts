@@ -15,6 +15,7 @@ export class ThryveProcessor {
       '/v5/dailyDynamicValues': dailyDynamicValues,
       '/v5/dynamicEpochValues': dynamicEpochValues,
       connectionStatus,
+      dataSource,
     } = job.data.sourceUpdate;
 
     const dailyDynamicValueTypes =
@@ -24,7 +25,7 @@ export class ThryveProcessor {
     if (dailyDynamicValues && dailyDynamicValueTypes.length) {
       await this.thryveService.processDailyDynamicValues({
         authenticationToken,
-        dataSources: '',
+        dataSources: dataSource.toString(),
         detailed: true,
         displayTypeName: true,
         endTimestampUnix: dailyDynamicValues.endTimestampUnix.toString(),
@@ -41,7 +42,7 @@ export class ThryveProcessor {
     if (dynamicEpochValues && dynamicEpochValueTypes.length) {
       await this.thryveService.processDynamicEpochValues({
         authenticationToken,
-        dataSources: '',
+        dataSources: dataSource.toString(),
         detailed: true,
         displayTypeName: true,
         endTimestampUnix: dailyDynamicValues.endTimestampUnix.toString(),
@@ -52,10 +53,11 @@ export class ThryveProcessor {
     }
 
     if (connectionStatus) {
-      await this.thryveService.toggleWearableConnection(
-        partnerUserID,
-        connectionStatus,
-      );
+      await this.thryveService.updateWearableConnectionStatus({
+        partnerUserId: partnerUserID,
+        status: connectionStatus,
+        dataSource,
+      });
     }
   }
 }

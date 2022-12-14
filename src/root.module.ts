@@ -3,7 +3,7 @@ import { ApolloDriver } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
 import { GraphQLModule } from '@nestjs/graphql';
-import { TestModule } from './modules/test/test.module';
+import { PersonalInformationModule } from './modules/personal-information/personal-information.module';
 import { ThryveModule } from './modules/thryve/thryve.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from './modules/user/user.module';
@@ -27,7 +27,7 @@ import { UserModule } from './modules/user/user.module';
       }),
       inject: [ConfigService],
     }),
-    TestModule,
+    PersonalInformationModule,
     UserModule,
     ThryveModule,
   ],

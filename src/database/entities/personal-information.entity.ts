@@ -15,9 +15,5 @@ export class PersonalInformationEntity {
 
   @Property({ nullable: true })
   @Field({ nullable: true })
-  isWearableConnected?: string;
-
-  @Property({ nullable: true })
-  @Field({ nullable: true })
   lastMeasurementAt?: Date;
 }

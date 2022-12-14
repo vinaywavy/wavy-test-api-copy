@@ -2,6 +2,7 @@ import { Body, Controller, HttpCode, OnModuleInit, Post } from '@nestjs/common';
 import { EventTriggerDto } from './event-trigger.dto';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
+import { ThryveAuth } from 'src/common/decorator/thryve-auth.decorator';
 
 @Controller('thryve')
 export class ThryveController implements OnModuleInit {
@@ -44,6 +45,7 @@ export class ThryveController implements OnModuleInit {
 
   @Post()
   @HttpCode(200)
+  @ThryveAuth()
   async eventTrigger(
     @Body() eventTriggerDto: EventTriggerDto,
   ): Promise<boolean> {

@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { PersonalInformationEntity } from 'src/database/entities/personal-information.entity';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
+import { DataSourceEntity } from 'src/database/entities/data-source.entity';
 
 interface DynamicValueProps {
   authenticationToken: string;
@@ -59,6 +60,12 @@ type DynamicEpochValuesBody = Omit<
   'partnerUserId'
 >;
 
+interface UpdateWearableConnectionStatusProps {
+  partnerUserId: string;
+  dataSource: number;
+  status: string;
+}
+
 @Injectable()
 export class ThryveService {
   private biomarkers: number[] = [
@@ -68,6 +75,8 @@ export class ThryveService {
 
   constructor(
     private readonly configService: ConfigService,
+    @InjectRepository(DataSourceEntity)
+    private readonly dataSourceRepository: EntityRepository<DataSourceEntity>,
     @InjectRepository(PersonalInformationEntity)
     private readonly personalInformationRepository: EntityRepository<PersonalInformationEntity>,
   ) {}
@@ -78,14 +87,20 @@ export class ThryveService {
     );
   }
 
-  async toggleWearableConnection(partnerUserId: string, isConnected: string) {
-    await this.personalInformationRepository
+  async updateWearableConnectionStatus({
+    partnerUserId,
+    status,
+    dataSource,
+  }: UpdateWearableConnectionStatusProps) {
+    await this.dataSourceRepository
       .createQueryBuilder()
-      .update({ isWearableConnected: isConnected })
-      .where({ user: { partnerUserId } })
+      .update({ status })
+      .where({ user: { id: partnerUserId }, value: dataSource })
       .execute();
 
-    return this.findPersonalInformationByPartnerUserId(partnerUserId);
+    return this.dataSourceRepository
+      .createQueryBuilder()
+      .where({ user: { id: partnerUserId }, value: dataSource });
   }
 
   async processDailyDynamicValues({
@@ -114,13 +129,13 @@ export class ThryveService {
     // TODO: Aggregate through data and map on personal information entity
     console.info(res);
 
-    // await this.personalInformationRepository.createQueryBuilder()
-    //     .update({ lastMeasurementAt: new Date() })
-    //     .where({ user: { partnerUserId } })
-    //     .execute()
+    await this.personalInformationRepository
+      .createQueryBuilder()
+      .update({ lastMeasurementAt: new Date() })
+      .where({ user: { id: partnerUserId } })
+      .execute();
 
-    // return this.findPersonalInformationByPartnerUserId(partnerUserId);
-    return null;
+    return this.findPersonalInformationByPartnerUserId(partnerUserId);
   }
 
   async processDynamicEpochValues({
@@ -149,16 +164,16 @@ export class ThryveService {
     // TODO: Aggregate through data and map on personal information entity
     console.info(res);
 
-    // await this.personalInformationRepository.createQueryBuilder()
-    //     .update({ lastMeasurementAt: new Date() })
-    //     .where({ user: { partnerUserId } })
-    //     .execute()
+    await this.personalInformationRepository
+      .createQueryBuilder()
+      .update({ lastMeasurementAt: new Date() })
+      .where({ user: { partnerUserId } })
+      .execute();
 
-    // return this.findPersonalInformationByPartnerUserId(partnerUserId);
-    return null;
+    return this.findPersonalInformationByPartnerUserId(partnerUserId);
   }
 
-  private async getDynamicValuesData<T, R>(url: string, body: T) {
+  private async getDynamicValuesData<T, R>(url: string, body: T): Promise<R> {
     const authorization = `Basic ${Buffer.from(
       `${this.configService.get<string>(
         'THRYVE_AUTHORIZATION_USERNAME',
@@ -194,7 +209,7 @@ export class ThryveService {
     partnerUserId: string,
   ): Promise<PersonalInformationEntity> {
     return this.personalInformationRepository.findOne({
-      user: { partnerUserId },
+      user: { id: Number(partnerUserId) },
     });
   }
 }

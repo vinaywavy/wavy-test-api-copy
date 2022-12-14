@@ -1,9 +1,10 @@
 import dotenv from 'dotenv';
-import { Options } from "@mikro-orm/core";
+import { Options } from '@mikro-orm/core';
 import { Migration20221207154617 } from 'src/database/migrations/Migration20221207154617';
 import { Migration20221208110347 } from 'src/database/migrations/Migration20221208110347';
+import { Migration20221214093535 } from 'src/database/migrations/Migration20221214093535';
 
-dotenv.config()
+dotenv.config();
 
 const config: Options = {
   allowGlobalContext: true,
@@ -12,12 +13,13 @@ const config: Options = {
     disableForeignKeys: false,
     snapshot: false,
     migrationsList: [
-      Migration20221207154617, 
-      Migration20221208110347
+      Migration20221207154617,
+      Migration20221208110347,
+      Migration20221214093535,
     ].map((migration) => ({
       name: migration.name,
-      class: migration
-    }))
+      class: migration,
+    })),
   },
   entities: ['dist/**/*.entity.js'],
   entitiesTs: ['src/**/*.entity.ts'],
