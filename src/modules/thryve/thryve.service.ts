@@ -127,7 +127,7 @@ export class ThryveService {
     });
 
     // TODO: Aggregate through data and map on personal information entity
-    console.info(res);
+    console.info('processDailyDynamicValues', res);
 
     await this.personalInformationRepository.upsert({
       lastMeasurementAt: new Date(),
@@ -161,7 +161,7 @@ export class ThryveService {
     });
 
     // TODO: Aggregate through data and map on personal information entity
-    console.info(res);
+    console.info('processDynamicEpochValues', res);
 
     await this.personalInformationRepository
       .createQueryBuilder()

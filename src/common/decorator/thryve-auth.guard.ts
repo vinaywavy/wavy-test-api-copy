@@ -10,11 +10,6 @@ export class ThryveAuthGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const { headers } = context.switchToHttp().getRequest();
-    console.info(
-      'guard: ',
-      headers['authorization'] ===
-        this.config.get<string>('THRYVE_EVENT_TRIGGER_AUTHORIZATION'),
-    );
     return (
       headers['authorization'] ===
       this.config.get<string>('THRYVE_EVENT_TRIGGER_AUTHORIZATION')
