@@ -92,11 +92,11 @@ export class ThryveService {
     status,
     dataSource,
   }: UpdateWearableConnectionStatusProps) {
-    await this.dataSourceRepository
-      .createQueryBuilder()
-      .update({ status })
-      .where({ user: { id: partnerUserId }, value: dataSource })
-      .execute();
+    await this.dataSourceRepository.upsert({
+      status,
+      user: { id: Number(partnerUserId) },
+      value: dataSource,
+    });
 
     return this.dataSourceRepository
       .createQueryBuilder()
@@ -129,11 +129,10 @@ export class ThryveService {
     // TODO: Aggregate through data and map on personal information entity
     console.info(res);
 
-    await this.personalInformationRepository
-      .createQueryBuilder()
-      .update({ lastMeasurementAt: new Date() })
-      .where({ user: { id: partnerUserId } })
-      .execute();
+    await this.personalInformationRepository.upsert({
+      lastMeasurementAt: new Date(),
+      user: { id: Number(partnerUserId) },
+    });
 
     return this.findPersonalInformationByPartnerUserId(partnerUserId);
   }

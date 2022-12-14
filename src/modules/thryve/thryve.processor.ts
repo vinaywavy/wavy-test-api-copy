@@ -9,6 +9,9 @@ export class ThryveProcessor {
 
   @Process()
   async processSourceUpdates(job: Job<EventTriggerDto>) {
+    /**
+     * Destructure values of job
+     */
     const {
       authenticationToken,
       partnerUserID,
@@ -18,6 +21,9 @@ export class ThryveProcessor {
       dataSource,
     } = job.data.sourceUpdate;
 
+    /**
+     * See if there are any daily dynamic values to process
+     */
     const dailyDynamicValueTypes =
       this.thryveService.getValueTypesThatMatchInterest(
         dailyDynamicValues.dailyDynamicValueTypes,
@@ -35,6 +41,9 @@ export class ThryveProcessor {
       });
     }
 
+    /**
+     * See if there are any epoch values to process
+     */
     const dynamicEpochValueTypes =
       this.thryveService.getValueTypesThatMatchInterest(
         dynamicEpochValues.dynamicValueTypes,
@@ -52,6 +61,9 @@ export class ThryveProcessor {
       });
     }
 
+    /**
+     * See if the connection status has to be updated of a datasource
+     */
     if (connectionStatus) {
       await this.thryveService.updateWearableConnectionStatus({
         partnerUserId: partnerUserID,
