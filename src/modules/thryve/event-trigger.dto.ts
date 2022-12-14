@@ -1,3 +1,14 @@
+export enum ConnectionStatus {
+  NEW = 'NEW',
+  DELETED = 'DELETED',
+}
+
+export enum UpdateType {
+  DAILY = 'DAILY',
+  MINUTE = 'MINUTE',
+  BOTH = 'BOTH',
+}
+
 export abstract class DynamicValueUnixTimestamps {
   startTimestampUnix: number;
   endTimestampUnix: number;
@@ -20,7 +31,8 @@ export class SourceUpdate {
   partnerUserID: string;
   dataSource: number;
   createdAt?: string;
-  connectionStatus?: string;
+  connectionStatus?: ConnectionStatus;
+  updateType?: UpdateType;
   '/v5/dailyDynamicValues'?: DailyDynamicValues;
   '/v5/dynamicEpochValues'?: DynamicEpochValues;
 }
