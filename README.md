@@ -19,7 +19,7 @@ cp .env.template .env
 
 ## Proxy for capturing Thryve EventTrigger's
 
-For the Thryve webhook to work you need to spin up a proxy via ngrok and put the URL.
+For the Thryve webhook to work you need to spin up a proxy via ngrok.
 After you get the URL don't forget to add it to the EventTrigger configuration on the Thryve app manager dashboard.
 
 ```
